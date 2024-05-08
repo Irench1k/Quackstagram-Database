@@ -1,9 +1,9 @@
-# Quackstagram README
+# Final Project README
 
 ## Overview
 Quackstagram is a simple social media application where users can share images, follow other users, like pictures, and update their profiles. Built with a focus on simplicity, it provides a basic platform for photo sharing and social networking.
 
-**Last Updated:** 27/03/2024
+**Last Updated:** 08/05/2024
 
 ## Installation
 
@@ -23,7 +23,5 @@ gradlew run
 ```
 
 ## Authors
-* Laurin Gschwenter
-* Matthieu Marienbach
 * Irina Iarlykanova
-* Selim Elkaffas
+* Vjosa Shabanaj
