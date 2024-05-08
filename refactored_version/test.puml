@@ -1,0 +1,100 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package "Quackstagram UI" {
+    class ExploreUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + ExploreUI()
+    }
+    class ImageUploadUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + ImageUploadUI()
+    }
+    class InstagramProfileUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + InstagramProfileUI(User user)
+    }
+    class NotificationsUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + NotificationsUI()
+    }
+    class QuakstagramHomeUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + QuakstagramHomeUI()
+    }
+    class SignInUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + SignInUI()
+    }
+    class SignUpUI {
+        - WIDTH: int
+        - HEIGHT: int
+        + SignUpUI()
+    }
+}
+
+package "Core Classes" {
+    class User {
+        - username: String
+        - bio: String
+        + addPicture(Picture)
+    }
+
+    class Picture {
+        - imagePath: String
+        - caption: String
+        + like()
+    }
+
+    class ImageLikesManager {
+        + likeImage(String, String)
+    }
+}
+
+package "Controllers" {
+    class ExploreController {
+        + ExploreController()
+    }
+    class ImageUploadController {
+        + ImageUploadController()
+    }
+    class ProfileController {
+        + ProfileController()
+    }
+    class NotificationsController {
+        + NotificationsController()
+    }
+    class HomeController {
+        + HomeController()
+    }
+    class AuthController {
+        + signIn(String, String): boolean
+        + signUp(User): boolean
+    }
+}
+
+ExploreUI .right.> ExploreController
+ImageUploadUI .right.> ImageUploadController
+InstagramProfileUI .right.> ProfileController
+NotificationsUI .right.> NotificationsController
+QuakstagramHomeUI .right.> HomeController
+SignInUI .right.> AuthController
+SignUpUI .right.> AuthController
+
+User "1" -- "*" Picture : owns
+Picture "1" -- "*" ImageLikesManager : updates
+
+ExploreController ..> User : interacts
+ImageUploadController ..> User : interacts
+ProfileController ..> User : interacts
+NotificationsController ..> User : interacts
+HomeController ..> User : interacts
+AuthController ..> User : manages
+
+@enduml

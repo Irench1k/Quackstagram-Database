@@ -1,0 +1,549 @@
+@startuml
+abstract class quackstagram.views.BaseFrameManager {
+# {static} int WIDTH
+# {static} int HEIGHT
+- String title
+- Theme theme
++ <<Create>> BaseFrameManager(String)
+# String getRawTitle()
+# String getFormattedTitle()
+# Color getColor(ColorID)
+# String getIconPath(IconID)
+# void initializeUI()
+- JPanel createHeaderPanel()
+# String getHeaderText()
+# {abstract}JComponent createMainContentPanel()
+# {abstract}JComponent createControlPanel()
+}
+
+
+class quackstagram.views.postlogin.components.InstagramUIComponents {
+- User currentUser
+- User targetUser
+- {static} int PROFILE_IMAGE_SIZE
+- boolean isCurrentUser
+- InstagramProfileController controller
+- Theme theme
+- Color followButtonColor
+- Color textPrimaryColor
+- Color backgroundHeaderSecondary
+- Color minorBackgroundColor
++ <<Create>> InstagramUIComponents(User,User,InstagramProfileController)
++ JPanel createHeaderPanel()
+- JLabel createProfileNameLabel()
+- JPanel createProfileNameAndBioPanel()
+- JTextArea createProfileBio()
+- JPanel createStatsFollowPanel(JPanel,JButton)
+- JButton createFollowButton()
+- void showThemeSelectionMenu(JButton)
+- JPanel createStatePanel()
+- JLabel createStatLabel(String,String)
+}
+
+
+class quackstagram.models.User {
+- String username
+- String password
+- String bio
+- String passCode
+- ArrayList<String> followingUsers
+- int followersCount
+- int postsCount
++ <<Create>> User(String,String,String,String,ArrayList<String>,int,int)
++ <<Create>> User(String,String,String,ArrayList<String>,int,int)
++ {static} User createInstance(String[])
++ String[] serialize()
++ boolean isUpdatable()
++ boolean isIdEqualTo(User)
++ String getUsername()
++ String getBio()
++ void setBio(String)
++ int getPostsCount()
++ int getFollowersCount()
++ int getFollowingCount()
++ boolean isPasswordEqual(String)
++ boolean isPassCodeEqual(String)
++ void setFollowersCount(int)
++ void setPostCount(int)
++ boolean followsUser(User)
++ void addUserToFollow(User)
++ String getProfileImagePath()
++ ArrayList<String> getFollowingUsers()
+}
+
+
+class quackstagram.views.postlogin.commands.OpenExploreUICommand {
+- AbstractPostLogin ui
++ <<Create>> OpenExploreUICommand(AbstractPostLogin)
++ void execute(User)
++ void exploreUI(User)
+}
+
+
+class quackstagram.models.Notification {
+- NotificationsUI notificationsUI
+- String username
+- String likedBy
+- String pictureId
+- String date
++ <<Create>> Notification(String,String,String,String)
++ <<Create>> Notification(String,String,String)
++ void update()
++ void setNotificationsUI(NotificationsUI)
++ {static} Notification createInstance(String[])
++ String getUsername()
++ String[] serialize()
++ boolean isUpdatable()
++ boolean isIdEqualTo(Notification)
++ String getMessage()
+- String getElapsedTime(String)
+}
+
+
+abstract class quackstagram.views.prelogin.AbstractPreLogin {
+- JButton primaryButton
+- JButton secondaryButton
+- JLabel lblPhoto
++ <<Create>> AbstractPreLogin(String)
+# String getFormattedTitle()
+# String getHeaderText()
+# JComponent createControlPanel()
+- JComponent createPrimaryButton()
+- JComponent createSecondaryButton()
+# JPanel getDuckIcon()
+# {abstract}String getSecondButtonText()
+# {abstract}JComponent createMainContentPanel()
+# {abstract}void onPrimaryButtonClick(ActionEvent)
+# {abstract}void onSecondaryButtonCLick(ActionEvent)
+}
+
+
+class quackstagram.views.prelogin.SignInUIDecorator {
+- SignInUI signInUI
+~ JTextField txtPassCode
++ <<Create>> SignInUIDecorator(SignInUI)
+# JPanel createMainContentPanel()
+# void onPrimaryButtonClick(ActionEvent)
+}
+
+
+class quackstagram.controllers.moderator.ModeratorController {
+- ModeratorModel model
+- ModeratorView view
++ <<Create>> ModeratorController(ModeratorModel,ModeratorView)
+- void onUserClicked(String)
+- void onAttributeClicked(String)
+- void updateView()
++ void showView()
+}
+
+
+class quackstagram.controllers.postlogin.QuakstagramHomeController {
+- QuakstagramHomeUI view
+- User currentUser
++ <<Create>> QuakstagramHomeController(QuakstagramHomeUI,User)
++ int addLike(Picture,NotificationsUI)
+}
+
+
+interface quackstagram.views.postlogin.NavigationCommand {
+~ void execute(User)
+}
+
+class quackstagram.views.postlogin.commands.OpenInstagramProfileUICommand {
+- AbstractPostLogin ui
++ <<Create>> OpenInstagramProfileUICommand(AbstractPostLogin)
++ void execute(User)
++ void openProfileUI(User)
+}
+
+
+class quackstagram.models.Picture {
+- List<Observer> observers
+- String pictureID
+- String owner
+- String caption
+- String date
+- int likesCount
++ <<Create>> Picture(String,String,String,String,int)
++ {static} Picture createInstance(String[])
++ {static} Picture createNewForUser(String,String)
++ String[] serialize()
++ boolean isUpdatable()
++ boolean isIdEqualTo(Picture)
++ String getOwner()
++ void addLike()
++ void addObserver(Observer)
++ void notifyObservers()
++ void removeObserver(Observer)
++ String getCaption()
++ int getLikesCount()
++ String getPictureID()
++ String getPath()
++ String getDate()
+}
+
+
+class quackstagram.views.postlogin.NotificationsUI {
+- JComponent contentPanel
++ <<Create>> NotificationsUI(User)
+# JComponent createMainContentPanel()
++ void updateNotifications()
+}
+
+
+class quackstagram.views.prelogin.SignUpUIDecorator {
+~ SignUpUI signUpUI
+~ JTextField twoFAField
++ <<Create>> SignUpUIDecorator(SignUpUI)
+# JPanel createMainContentPanel()
+# void onPrimaryButtonClick(ActionEvent)
+}
+
+
+class quackstagram.views.Theme {
+- {static} Theme theme
+- ThemeName currentTheme
+- EnumMap<ThemeName,EnumMap<ColorID,Color>> themeDefinitions
+- EnumMap<ThemeName,EnumMap<IconID,String>> iconDefinitions
+- <<Create>> Theme()
++ {static} Theme getInstance()
++ void changeTheme(ThemeName)
++ Color getColor(ColorID)
++ String getIconPath(IconID)
+}
+
+
+enum quackstagram.views.ThemeName {
++  DARK
++  LIGHT
+}
+
+class quackstagram.controllers.prelogin.SignInController {
++ SignInUI view
++ <<Create>> SignInController(SignInUI)
++ void logIn(String,String)
++ void logIn(String,String,String)
+# void showProfileUI(User)
++ void showSignUp()
++ void showSignIn()
+}
+
+
+class quackstagram.UserLaunch {
++ {static} void main(String[])
+}
+
+class quackstagram.views.prelogin.SignUpUI {
+# JTextField txtUsername
+# JTextField txtPassword
+# JTextField txtBio
+# JButton btnUploadPhoto
+# File selectedFile
+# SignUpController controller
++ <<Create>> SignUpUI()
+# String getSecondButtonText()
+# JPanel createMainContentPanel()
+# void onPrimaryButtonClick(ActionEvent)
+# void onSecondaryButtonCLick(ActionEvent)
++ void handleProfilePictureUpload()
+}
+
+
+interface quackstagram.models.Subject {
+~ void addObserver(Observer)
+~ void removeObserver(Observer)
+~ void notifyObservers()
+}
+
+class quackstagram.controllers.postlogin.ImageUploadController {
+- ImageUploadUI view
+- User currentUser
++ <<Create>> ImageUploadController(ImageUploadUI,User)
++ void uploadAction(String)
+- File selectFile()
+}
+
+
+class quackstagram.views.postlogin.ImageUploadUI {
+- JLabel imagePreviewLabel
+- JTextArea captionArea
+- JButton uploadButton
+- ImageUploadController controller
++ <<Create>> ImageUploadUI(User)
+# JComponent createMainContentPanel()
+- void createUploadButton(JPanel)
+- void createCaptionTextAndPane(JPanel)
+- void createImageIcon(JPanel)
+# List<String> disabledIcons()
+}
+
+
+class quackstagram.views.postlogin.QuakstagramHomeUI {
+- AbstractPostLogin ui
+- NotificationsUI notificationsUI
+- {static} int IMAGE_WIDTH
+- {static} int IMAGE_HEIGHT
+- CardLayout cardLayout
+- JPanel cardPanel
+- JPanel homePanel
+- JPanel imageViewPanel
+- QuakstagramHomeController controller
++ <<Create>> QuakstagramHomeUI(User,NotificationsUI)
+# JComponent createMainContentPanel()
+# String getHeaderText()
+- ArrayList<Picture> getPicturesToShow()
+- void populateContentPanel(JPanel,ArrayList<Picture>)
+- JPanel getItemPanel()
+- JLabel getNameLabel(String)
+- JLabel getCaptionLabel(String)
+- JLabel getLikesLabel(int)
+- JPanel getSpacingPanel()
+- JLabel getImageLabel(String)
+- JPanel getUserPanel(Picture)
+- JPanel getInfoPanel(Picture)
+- void displayImage(Picture)
+- JButton getLikeButton(Picture,JLabel)
+}
+
+
+class quackstagram.views.postlogin.commands.OpenImageUploadUICommand {
+- AbstractPostLogin ui
++ <<Create>> OpenImageUploadUICommand(AbstractPostLogin)
++ void execute(User)
++ void imageUploadUI(User)
+}
+
+
+interface quackstagram.models.Observer {
+~ void update()
+}
+
+class quackstagram.views.postlogin.commands.OpenNotificationUICommand {
+- AbstractPostLogin ui
++ <<Create>> OpenNotificationUICommand(AbstractPostLogin)
++ void execute(User)
++ void notificationsUI(User)
+}
+
+
+class quackstagram.models.ModeratorModel {
+- {static} Path USERS_FILE
+- {static} Path PICTURES_FILE
+- List<User> userList
++ <<Create>> ModeratorModel()
+- void loadUsers()
++ List<User> getUserList()
++ User getUserByUsername(String)
++ List<Picture> getPicturesForUser(String)
++ void refreshUserList()
+}
+
+
+class quackstagram.views.postlogin.ExploreUI {
+- int WIDTH
+~ {static} int IMAGE_SIZE
+- ExploreController controller
++ <<Create>> ExploreUI(User)
+# JComponent createMainContentPanel()
++ void loadImages(JPanel)
+- String getCalculatedTime(Picture)
+- JPanel getTopPanel(Picture)
+- JLabel getImageLabel(Picture)
+- JPanel getBottomPanel(Picture)
+- JPanel getBackButtonPanel()
+- JPanel getContainerPanel(Picture)
++ void displayImage(Picture)
+}
+
+
+class quackstagram.controllers.postlogin.ExploreController {
+- ExploreUI view
+- User currentUser
++ <<Create>> ExploreController(ExploreUI,User)
++ void goToUserProfile(String)
+}
+
+
+class quackstagram.views.moderator.ModeratorView {
+- JList<String> userListDisplay
+- JList<String> userDetailsList
+- DefaultListModel<String> userDetailsModel
+- JButton deleteButton
+- JLabel imagePreview
+- Consumer<String> onUserClick
+- Consumer<String> onAttributeClick
++ <<Create>> ModeratorView()
+- void initializeComponents()
+- void clearImagePreview()
+- void layoutComponents()
++ void displayUserList(List<String>)
++ void setUserDetails(List<String>)
+- void loadImagePreview(String)
++ void setOnUserClickListener(Consumer<String>)
++ void setOnAttributeClickListener(Consumer<String>)
+- void updateDeleteButtonVisibility()
++ String getSelectedUsername()
+}
+
+
+abstract class quackstagram.views.postlogin.AbstractPostLogin {
+# {static} int NAV_ICON_SIZE
+# User currentUser
++ <<Create>> AbstractPostLogin(String,User)
+# User getCurrentUser()
+# {abstract}JComponent createMainContentPanel()
+# JComponent createControlPanel()
+# List<String> disabledIcons()
+- JButton createIconButton(String,String)
+- void performActionBasedOnButtonType(String)
+}
+
+
+class quackstagram.views.postlogin.commands.OpenHomeUICommand {
+- AbstractPostLogin ui
++ <<Create>> OpenHomeUICommand(AbstractPostLogin)
++ void execute(User)
++ void openHomeUI(User)
+}
+
+
+abstract class quackstagram.models.AbstractModel {
++ {abstract}String[] serialize()
++ {abstract}boolean isUpdatable()
++ {abstract}boolean isIdEqualTo(T)
+}
+
+enum quackstagram.views.ColorID {
++  BACKGROUND_HEADER
++  BACKGROUND_HEADER_SECONDARY
++  MAIN_BACKGROUND
++  MINOR_BACKGROUND
++  LIKE_BUTTON
++  PRIMARY_lOGIN_BUTTON
++  BACKGROUND_SPACING
++  FOLLOW_BUTTON
++  TEXT_PRIMARY
++  TEXT_SECONDARY
++  ENTER_COMPONENT
++  OPPOSITE_TEXT
+}
+
+class quackstagram.views.postlogin.InstagramProfileUI {
+- {static} int GRID_IMAGE_SIZE
+- InstagramUIComponents uiComponents
+- JPanel contentPanel
+- User targetUser
+- InstagramProfileController controller
++ <<Create>> InstagramProfileUI(User,User)
++ <<Create>> InstagramProfileUI(User)
+# JComponent createMainContentPanel()
+- void overwriteMainContentPanel()
+- JLabel createImageLabel(ImageIcon)
+- void displayImage(ImageIcon)
+# List<String> disabledIcons()
+}
+
+
+class quackstagram.views.prelogin.SignInUI {
+# JTextField txtUsername
+# JTextField txtPassword
+# SignInController controller
++ <<Create>> SignInUI()
+# JPanel createMainContentPanel()
+# String getSecondButtonText()
+# void onPrimaryButtonClick(ActionEvent)
+# void onSecondaryButtonCLick(ActionEvent)
+}
+
+
+class quackstagram.controllers.prelogin.SignUpController {
++ SignUpUI view
++ <<Create>> SignUpController(SignUpUI)
++ void signUp(String,String,String,String,File)
++ void signUp(String,String,String,File)
+- void saveProfilePicture(File,String)
++ void showSignIn()
++ void showSignInDecorator()
++ void showSignUp()
+}
+
+
+enum quackstagram.views.IconID {
++  ADD
++  HEART
++  HOME
++  PROFILE
++  SEARCH
+}
+
+class quackstagram.utilities.FileHandler {
+- {static} Path NOTIFICATIONS_FILE
+- {static} Path PICTURES_FILE
+- {static} Path USERS_FILE
+- {static} Path PROFILE_PICTURE_DIR
+- {static} Path UPLOADS_PICTURE_DIR
++ {static} User getUser(String)
++ {static} void saveUser(User)
++ {static} Picture getPictureById(String)
++ {static} ArrayList<Picture> getUserPictures(String)
++ {static} void savePicture(Picture)
++ {static} void uploadImage(File,Picture)
++ {static} void uploadProfilePicture(File,String)
++ {static} ArrayList<Notification> getNotifications(String)
++ {static} void saveNotification(Notification)
+- {static} ArrayList<T> readFile(Path,Function<String[],T>)
+- {static} void saveToFile(Path,T,Function<String[],T>)
++ {static} void deleteUserBio(String)
++ {static} void deleteUserProfilePicture(String)
++ {static} void deleteUserUploadedPicture(String)
+- {static} void saveAllUsers(ArrayList<User>)
+- {static} void saveAllPictures(ArrayList<Picture>)
+}
+
+
+class quackstagram.ModeratorLaunch {
++ {static} void main(String[])
+}
+
+class quackstagram.controllers.postlogin.InstagramProfileController {
+- InstagramProfileUI view
+- User currentUser
+- User targetUser
++ <<Create>> InstagramProfileController(InstagramProfileUI,User,User)
++ void showProfileUI()
++ void handleFollowAction()
+}
+
+
+
+
+javax.swing.JFrame <|-- quackstagram.views.BaseFrameManager
+quackstagram.models.AbstractModel <|-- quackstagram.models.User
+quackstagram.views.postlogin.NavigationCommand <|.. quackstagram.views.postlogin.commands.OpenExploreUICommand
+javax.swing.JFrame <|-- quackstagram.views.postlogin.commands.OpenExploreUICommand
+quackstagram.models.Observer <|.. quackstagram.models.Notification
+quackstagram.models.AbstractModel <|-- quackstagram.models.Notification
+quackstagram.views.BaseFrameManager <|-- quackstagram.views.prelogin.AbstractPreLogin
+quackstagram.views.prelogin.SignInUI <|-- quackstagram.views.prelogin.SignInUIDecorator
+quackstagram.views.postlogin.NavigationCommand <|.. quackstagram.views.postlogin.commands.OpenInstagramProfileUICommand
+javax.swing.JFrame <|-- quackstagram.views.postlogin.commands.OpenInstagramProfileUICommand
+quackstagram.models.Subject <|.. quackstagram.models.Picture
+quackstagram.models.AbstractModel <|-- quackstagram.models.Picture
+quackstagram.views.postlogin.AbstractPostLogin <|-- quackstagram.views.postlogin.NotificationsUI
+quackstagram.views.prelogin.SignUpUI <|-- quackstagram.views.prelogin.SignUpUIDecorator
+quackstagram.views.prelogin.AbstractPreLogin <|-- quackstagram.views.prelogin.SignUpUI
+quackstagram.views.postlogin.AbstractPostLogin <|-- quackstagram.views.postlogin.ImageUploadUI
+quackstagram.views.postlogin.AbstractPostLogin <|-- quackstagram.views.postlogin.QuakstagramHomeUI
+quackstagram.views.postlogin.NavigationCommand <|.. quackstagram.views.postlogin.commands.OpenImageUploadUICommand
+javax.swing.JFrame <|-- quackstagram.views.postlogin.commands.OpenImageUploadUICommand
+quackstagram.views.postlogin.NavigationCommand <|.. quackstagram.views.postlogin.commands.OpenNotificationUICommand
+javax.swing.JFrame <|-- quackstagram.views.postlogin.commands.OpenNotificationUICommand
+quackstagram.views.postlogin.AbstractPostLogin <|-- quackstagram.views.postlogin.ExploreUI
+quackstagram.views.moderator.JFrame <|-- quackstagram.views.moderator.ModeratorView
+quackstagram.views.BaseFrameManager <|-- quackstagram.views.postlogin.AbstractPostLogin
+quackstagram.views.postlogin.NavigationCommand <|.. quackstagram.views.postlogin.commands.OpenHomeUICommand
+javax.swing.JFrame <|-- quackstagram.views.postlogin.commands.OpenHomeUICommand
+quackstagram.views.postlogin.AbstractPostLogin <|-- quackstagram.views.postlogin.InstagramProfileUI
+quackstagram.views.prelogin.AbstractPreLogin <|-- quackstagram.views.prelogin.SignInUI
+@enduml
