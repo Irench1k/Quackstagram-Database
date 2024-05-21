@@ -7,9 +7,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import quackstagram.utilities.FileHandler;
+import quackstagram.utilities.*;
 import quackstagram.models.Picture;
 import quackstagram.models.User;
+import quackstagram.utilities.DatabaseHandler;
 import quackstagram.views.postlogin.ImageUploadUI;
 
 public class ImageUploadController {
@@ -29,8 +30,8 @@ public class ImageUploadController {
 
         try {
             Picture picture = Picture.createNewForUser(currentUser.getUsername(), caption);
-            FileHandler.uploadImage(selectedFile, picture);
-            FileHandler.savePicture(picture);
+            DatabaseHandler.uploadImage(selectedFile, picture);
+            DatabaseHandler.savePicture(picture);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(view, "Error saving image: " + ex.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);

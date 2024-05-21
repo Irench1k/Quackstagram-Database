@@ -3,13 +3,10 @@ package quackstagram.models;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 // Represents a picture on Quackstagram
-public class Picture extends AbstractModel<Picture> implements Subject {
-    private List<Observer> observers = new ArrayList<>();
+public class Picture extends AbstractModel<Picture> {
     private String pictureID;
     private String owner;
     private String caption;
@@ -41,11 +38,11 @@ public class Picture extends AbstractModel<Picture> implements Subject {
         String formattedCurrentDate = ZonedDateTime.now(TimeZone.getTimeZone("UTC").toZoneId()).format(formatter);
 
         return new Picture(
-                pictureId,
-                owner,
-                caption,
-                formattedCurrentDate,
-                0);
+            pictureId,
+            owner,
+            caption,
+            formattedCurrentDate,
+            0);
     }
 
     @Override
@@ -67,48 +64,9 @@ public class Picture extends AbstractModel<Picture> implements Subject {
         return this.owner;
     }
 
-    /**
-     * Increases the number of likes for this picture by one and notifies the
-     * observers.
-     * 
-     * Observer Design Pattern
-     */
+    // Increment likes count
     public void addLike() {
         likesCount++;
-        notifyObservers();
-    }
-
-    /**
-     * Adds an observer to the list of observers for this Picture.
-     *
-     * @param observer the observer to be added
-     * 
-     *                 Observer Design Pattern
-     */
-    public void addObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    /**
-     * Notifies all the observers by calling their update method.
-     * 
-     * Observer Design Pattern
-     */
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
-        }
-    }
-
-    /**
-     * Removes an observer from the list of observers for this Picture.
-     *
-     * @param observer the observer to be removed
-     * 
-     *                 Observer Design Pattern
-     */
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
     }
 
     public String getCaption() {
