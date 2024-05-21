@@ -24,6 +24,6 @@ public class InstagramProfileController {
 
     public void handleFollowAction() {
         this.currentUser.addUserToFollow(targetUser);
-        DatabaseHandler.saveUser(targetUser);
+        DatabaseHandler.saveUser(this.currentUser);
     }
 }
