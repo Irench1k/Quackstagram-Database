@@ -41,32 +41,36 @@ public class DatabaseConnector {
         }
     }
 
-    // // Everythid for user (45 - 130)
-    // public static User getUser(String username) throws Exception {
-    //     Connection connection = null;
-    //     Statement statement = null;
-    //     ResultSet resultSet = null;
+    // Everythid for user (45 - 130)
+    public User getUser(String username) throws Exception {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
 
-    //     try {
-    //         connection = DatabaseConnector.connect();
-    //         statement = connection.createStatement();
-    //         String query = "SELECT * FROM Users WHERE username = '" + username + "'";
-    //         resultSet = statement.executeQuery(query);
-    //         if (resultSet.next()) {
-    //             String password = resultSet.getString("password");
-    //             String bio = resultSet.getString("bio");
+        try {
+            connection = DatabaseConnector.connect();
+            statement = connection.createStatement();
+            String query = "SELECT * FROM Users WHERE username = '" + username + "'";
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                System.out.println("Inside the if");
+                String password = resultSet.getString("password");
+                System.out.println("Password: " + password);
+                String bio = resultSet.getString("bio");
+                System.out.println("Bio: " + bio);
+                ArrayList<String> s = new ArrayList<>();
 
-    //             ArrayList<String> followingUsers = getFollowingUser(username);
-    //             int followersCount = getFollowersCount(username);
-    //             int postsCount = getPostCount(username);
-    //             return new User(username, password, bio, followingUsers, followersCount, postsCount);
-    //         } else {
-    //             throw new Exception("No such user " + username + " exists");
-    //         }
-    //     } finally {
-    //         DatabaseConnector.close(connection, statement, resultSet);
-    //     }
-    // }
+                ArrayList<String> followingUsers = s;
+                int followersCount = 0;
+                int postsCount = 0;
+                return new User(username, password, bio, followingUsers, followersCount, postsCount);
+            } else {
+                throw new Exception("No such user " + username + " exists");
+            }
+        } finally {
+            DatabaseConnector.close(connection, statement, resultSet);
+        }
+    }
 
     // public static ArrayList<String> getFollowingUser(String username) throws Exception {
     //     Connection connection = null;

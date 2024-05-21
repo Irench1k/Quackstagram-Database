@@ -9,9 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
-
 
 import javax.imageio.ImageIO;
 
@@ -20,32 +18,33 @@ import quackstagram.models.Notification;
 import quackstagram.models.Picture;
 import quackstagram.models.User;
 
-/**
- * The FileHandler class provides static utility methods to read and write user, picture,
- * and notification data from and to persistent storage. It also handles image file operations
- * for user profile pictures and uploaded pictures.
- */
 public class DatabaseHandler {
     private static final Path NOTIFICATIONS_FILE = Paths.get("data", "notifications.txt");
     private static final Path PICTURES_FILE = Paths.get("data", "pictures.txt");
     private static final Path USERS_FILE = Paths.get("data", "users.txt");
     private static final Path PROFILE_PICTURE_DIR = Paths.get("img", "profile");
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
+    private static UserRepository userRepository = new UserRepository();
+    private static DatabaseConnector dbConnector = new DatabaseConnector();
 
-    public static User getUser(String username) throws Exception {
-        ArrayList<User> users = readFile(USERS_FILE, User::createInstance);
-
-        for (User user : users) {
-            if (username.equals(user.getUsername())) {
-                return user;
-            }
+    public static User getUser(String username) {
+        User user = null;
+        try {
+            user = userRepository.getUser(username);
+            System.out.println("User is " + user);
+        } catch (Exception e) {
+            System.err.println("Could not get user: " + e);
         }
 
-        throw new Exception("No such user " + username + " exist");
+        return user;
     }
 
     public static void saveUser(User user) {
-        saveToFile(USERS_FILE, user, User::createInstance);
+        try {
+            userRepository.saveUser(user);
+        } catch (Exception e) {
+            System.err.println("Could not save user: " + e);
+        }
     }
 
     public static Picture getPictureById(String pictureId) throws Exception {
@@ -60,6 +59,7 @@ public class DatabaseHandler {
         throw new Exception("No such picture " + pictureId + " exist");
     }
 
+    // username == null -> return all pictures
     public static ArrayList<Picture> getUserPictures(String username) {
         ArrayList<Picture> allPictures = readFile(PICTURES_FILE, Picture::createInstance);
         ArrayList<Picture> userPictures = new ArrayList<Picture>();
@@ -89,6 +89,8 @@ public class DatabaseHandler {
         ImageIO.write(image, "png", outputFile);
     }
 
+    // All notifications *FOR SELECTED USER* (i.e. all notifications they should
+    // see)
     public static ArrayList<Notification> getNotifications(String username) {
         ArrayList<Notification> allNotifications = readFile(NOTIFICATIONS_FILE, Notification::createInstance);
         ArrayList<Notification> userNotifications = new ArrayList<Notification>();
@@ -132,6 +134,9 @@ public class DatabaseHandler {
         return result;
     }
 
+    // If update == true and object already exists in a file, update its line
+    // If update == false, ALWAYS create a new line
+    // Existing object is detected by comparing the zero element in a file
     private static <T extends AbstractModel<T>> void saveToFile(Path filePath, T object,
             Function<String[], T> instanceCreator) {
         ArrayList<T> existingData = readFile(filePath, instanceCreator);
@@ -163,93 +168,6 @@ public class DatabaseHandler {
                 writer.newLine();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void deleteUserBio(String username) {
-        // Read all lines from the USERS_FILE
-        List<String> lines = new ArrayList<>();
-        try {
-            lines = Files.readAllLines(USERS_FILE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Update the bio for the matching username
-        List<String> updatedLines = new ArrayList<>();
-        for (String line : lines) {
-            String[] parts = line.split("; ");
-            if (parts[0].equals(username)) {
-                parts[2] = ""; // Clear the bio
-                String updatedLine = String.join("; ", parts);
-                updatedLines.add(updatedLine);
-            } else {
-                updatedLines.add(line);
-            }
-        }
-
-        // Write the updated lines back to the USERS_FILE
-        try (BufferedWriter writer = Files.newBufferedWriter(USERS_FILE)) {
-            for (String updatedLine : updatedLines) {
-                writer.write(updatedLine);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Bio updated to: " + updatedLines);
-    }
-
-    // Method to delete a user's profile picture
-    public static void deleteUserProfilePicture(String username) {
-        Path profilePicturePath = PROFILE_PICTURE_DIR.resolve(username + ".png");
-        try {
-            Files.deleteIfExists(profilePicturePath);
-        } catch (IOException e) {
-            // Handle the exception, such as logging the error
-            e.printStackTrace();
-        }
-    }
-
-    public static void deleteUserUploadedPicture(String pictureId) {
-        // Remove the picture record from the data file
-        ArrayList<Picture> pictures = readFile(PICTURES_FILE, Picture::createInstance);
-        pictures.removeIf(picture -> picture.getPictureID().equals(pictureId));
-        saveAllPictures(pictures);
-
-        // Delete the picture file from the uploaded directory
-        Path picturePath = UPLOADS_PICTURE_DIR.resolve(pictureId + ".png");
-        try {
-            Files.deleteIfExists(picturePath);
-        } catch (IOException e) {
-            // Handle the exception, such as logging the error
-            e.printStackTrace();
-        }
-    }
-
-    private static void saveAllUsers(ArrayList<User> users) {
-        try (BufferedWriter writer = Files.newBufferedWriter(USERS_FILE)) {
-            for (User user : users) {
-                String line = String.join("; ", user.serialize());
-                writer.write(line);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void saveAllPictures(ArrayList<Picture> pictures) {
-        try (BufferedWriter writer = Files.newBufferedWriter(PICTURES_FILE)) {
-            for (Picture picture : pictures) {
-                String line = String.join("; ", picture.serialize());
-                writer.write(line);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            // Handle the exception here
             e.printStackTrace();
         }
     }

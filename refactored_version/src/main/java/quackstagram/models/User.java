@@ -1,17 +1,18 @@
 package quackstagram.models;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 public class User extends AbstractModel<User> {
     private String username;
     private String password;
     private String bio;
-    private ArrayList<String> followingUsers; // other users that this one follows
+    private List<String> followingUsers; // other users that this one follows
     private int followersCount;
     private int postsCount;
 
-    public User(String username, String password, String bio, ArrayList<String> followingUsers,
+    public User(String username, String password, String bio, List<String> followingUsers,
                 int followersCount, int postsCount) {
         this.username = username;
         this.password = password;
@@ -67,6 +68,10 @@ public class User extends AbstractModel<User> {
      */
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     /**

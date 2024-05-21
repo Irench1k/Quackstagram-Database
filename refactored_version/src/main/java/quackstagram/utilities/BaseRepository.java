@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class BaseRepository<T> {
+public abstract class BaseRepository {
 
     protected Connection getConnection() throws SQLException, ClassNotFoundException {
         return DatabaseConnector.connect();
@@ -17,7 +17,7 @@ public abstract class BaseRepository<T> {
         DatabaseConnector.close(connection, statement, resultSet);
     }
 
-    protected T executeQuery(String query, Function<ResultSet, T> mapper, Object... params) throws Exception {
+    protected ResultSet executeQuery(String query, Object... params) throws Exception, SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -29,7 +29,7 @@ public abstract class BaseRepository<T> {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return mapper.apply(resultSet);
+                return resultSet;
             } else {
                 return null;
             }
@@ -38,11 +38,11 @@ public abstract class BaseRepository<T> {
         }
     }
 
-    protected List<T> executeQueryList(String query, Function<ResultSet, T> mapper, Object... params) throws Exception {
+    protected List<ResultSet> executeQueryList(String query, Object... params) throws Exception {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        List<T> resultList = new ArrayList<>();
+        List<ResultSet> resultList = new ArrayList<>();
 
         try {
             connection = getConnection();
@@ -51,7 +51,7 @@ public abstract class BaseRepository<T> {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                resultList.add(mapper.apply(resultSet));
+                resultList.add(resultSet);
             }
         } finally {
             closeResources(connection, statement, resultSet);
