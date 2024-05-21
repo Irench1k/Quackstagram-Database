@@ -12,7 +12,7 @@ public class DatabaseConnector {
         try {
             String URL = "jdbc:mysql://localhost:3306/quackstagram";
             Class.forName("com.mysql.cj.jdbc.Driver");
-            myCon = DriverManager.getConnection(URL, "irina", "irina");
+            myCon = DriverManager.getConnection(URL, "BCS1510", "BCS1510");
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -137,8 +137,8 @@ public class DatabaseConnector {
     //     }
     // }
 
-    // public static void main(String[] args) {
-    //     System.out.println("I WORK");
-    //     connect();
-    // }
+    public static void main(String[] args) {
+        System.out.println("I WORK");
+        connect();
+    }
 }
