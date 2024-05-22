@@ -26,6 +26,7 @@ public class DatabaseHandler {
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
     private static UserRepository userRepository = new UserRepository();
     private static PictureRepository pictureRepository = new PictureRepository();
+    private static NotificationRepository notificationRepository = new NotificationRepository();
 
     public static User getUser(String username) {
         User user = null;
@@ -93,21 +94,22 @@ public class DatabaseHandler {
     // All notifications *FOR SELECTED USER* (i.e. all notifications they should
     // see)
     public static ArrayList<Notification> getNotifications(String username) {
-        ArrayList<Notification> allNotifications = readFile(NOTIFICATIONS_FILE, Notification::createInstance);
         ArrayList<Notification> userNotifications = new ArrayList<Notification>();
-
-        for (Notification notification : allNotifications) {
-            // if username == zero element in the notifications.txt, this user received like
-            if (username.equals(notification.getUsername())) {
-                userNotifications.add(notification);
-            }
+        try {
+            userNotifications = notificationRepository.getNotifications(username);
+        } catch (Exception e) {
+            System.out.println("Could not parse notifications: " + e);
         }
 
         return userNotifications;
     }
 
     public static void saveNotification(Notification notification) {
-        saveToFile(NOTIFICATIONS_FILE, notification, Notification::createInstance);
+        try {
+            notificationRepository.saveNotification(notification);
+        } catch (Exception e) {
+            System.out.println("Could not save notification: " + e);
+        }
     }
 
     private static <T> ArrayList<T> readFile(Path filePath, Function<String[], T> instanceCreator) {

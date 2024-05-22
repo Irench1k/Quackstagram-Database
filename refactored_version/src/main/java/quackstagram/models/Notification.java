@@ -12,6 +12,8 @@ public class Notification extends AbstractModel<Notification> {
     private String pictureId;
     private String date;
 
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public Notification(String username, String likedBy, String pictureId, String date) {
         this.username = username;
         this.likedBy = likedBy;
@@ -24,7 +26,6 @@ public class Notification extends AbstractModel<Notification> {
         this.likedBy = likedBy;
         this.pictureId = pictureId;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.date = ZonedDateTime.now(TimeZone.getTimeZone("UTC").toZoneId()).format(formatter);
     }
 
@@ -38,6 +39,18 @@ public class Notification extends AbstractModel<Notification> {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getLikedBy() {
+        return likedBy;
+    }
+
+    public String getPictureId() {
+        return pictureId;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     @Override
