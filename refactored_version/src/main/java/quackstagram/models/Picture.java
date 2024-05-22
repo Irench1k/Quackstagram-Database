@@ -13,6 +13,8 @@ public class Picture extends AbstractModel<Picture> {
     private String date;
     private int likesCount;
 
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public Picture(String pictureId, String owner, String caption, String date, int likesCount) {
         this.pictureID = pictureId;
         this.owner = owner;
@@ -24,25 +26,16 @@ public class Picture extends AbstractModel<Picture> {
     public static Picture createInstance(String[] args) throws RuntimeException {
         if (args.length != 5) {
             System.out.println(String.join(", ", args));
-            throw new RuntimeException("Could parse picture line, expected 5 arguments!");
+            throw new RuntimeException("Could not parse picture line, expected 5 arguments!");
         }
         int likes = Integer.parseInt(args[4]);
         return new Picture(args[0], args[1], args[2], args[3], likes);
     }
-
+    
     public static Picture createNewForUser(String owner, String caption) {
-        // UNIX timestamp
         String pictureId = String.valueOf(Instant.now().getEpochSecond());
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedCurrentDate = ZonedDateTime.now(TimeZone.getTimeZone("UTC").toZoneId()).format(formatter);
-
-        return new Picture(
-            pictureId,
-            owner,
-            caption,
-            formattedCurrentDate,
-            0);
+        return new Picture(pictureId, owner, caption, formattedCurrentDate, 0);
     }
 
     @Override

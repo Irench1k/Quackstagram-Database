@@ -42,19 +42,6 @@ public class UserRepository extends BaseRepository {
         }
     }
 
-    public void deleteUser(String username) throws Exception {
-        Connection connection = null;
-        PreparedStatement statement = null;
-
-        try {
-            connection = getConnection();
-            String query = "DELETE FROM Users WHERE username = ?";
-            executeUpdate(connection, statement, query, username);
-        } finally {
-            closeResources(connection, statement, null);
-        }
-    }
-
     private User toUser(ResultSet resultSet) throws Exception {
         String username = resultSet.getString("username");
         String password = resultSet.getString("password");

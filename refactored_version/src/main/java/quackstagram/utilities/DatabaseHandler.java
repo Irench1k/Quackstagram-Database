@@ -25,6 +25,7 @@ public class DatabaseHandler {
     private static final Path PROFILE_PICTURE_DIR = Paths.get("img", "profile");
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
     private static UserRepository userRepository = new UserRepository();
+    private static PictureRepository pictureRepository = new PictureRepository();
 
     public static User getUser(String username) {
         User user = null;
@@ -47,33 +48,34 @@ public class DatabaseHandler {
     }
 
     public static Picture getPictureById(String pictureId) throws Exception {
-        ArrayList<Picture> pictures = readFile(PICTURES_FILE, Picture::createInstance);
-
-        for (Picture picture : pictures) {
-            if (pictureId.equals(picture.getPictureID())) {
-                return picture;
-            }
+        Picture picture = null;
+        try {
+            picture = pictureRepository.getPictureById(pictureId);
+        } catch (Exception e) {
+            System.out.println("No such picture " + pictureId + " exist");
         }
 
-        throw new Exception("No such picture " + pictureId + " exist");
+        return picture;
     }
 
     // username == null -> return all pictures
     public static ArrayList<Picture> getUserPictures(String username) {
-        ArrayList<Picture> allPictures = readFile(PICTURES_FILE, Picture::createInstance);
         ArrayList<Picture> userPictures = new ArrayList<Picture>();
-
-        for (Picture picture : allPictures) {
-            if (username == null || username.equals(picture.getOwner())) {
-                userPictures.add(picture);
-            }
+        try {
+            userPictures = pictureRepository.getUserPictures(username);
+        } catch (Exception e) {
+            System.err.println("Could not get user pictures: " + e);
         }
 
         return userPictures;
     }
 
     public static void savePicture(Picture picture) {
-        saveToFile(PICTURES_FILE, picture, Picture::createInstance);
+        try {
+            pictureRepository.savePicture(picture);
+        } catch (Exception e) {
+            System.out.println("Could not save picutre: " + e);
+        }
     }
 
     public static void uploadImage(File file, Picture picture) throws IOException {
