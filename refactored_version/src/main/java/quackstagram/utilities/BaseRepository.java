@@ -17,61 +17,29 @@ public abstract class BaseRepository {
         DatabaseConnector.close(connection, statement, resultSet);
     }
 
-    protected ResultSet executeQuery(String query, Object... params) throws Exception, SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(query);
-            setParameters(statement, params);
-            resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return resultSet;
-            } else {
-                return null;
-            }
-        } finally {
-            closeResources(connection, statement, resultSet);
-        }
+    protected ResultSet executeQuery(Connection connection, PreparedStatement statement, String query, Object... params) throws Exception {
+        statement = connection.prepareStatement(query);
+        setParameters(statement, params);
+        return statement.executeQuery();
     }
 
-    protected List<ResultSet> executeQueryList(String query, Object... params) throws Exception {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+    protected List<ResultSet> executeQueryList(Connection connection, PreparedStatement statement, String query, Object... params) throws Exception {
         List<ResultSet> resultList = new ArrayList<>();
+        statement = connection.prepareStatement(query);
+        setParameters(statement, params);
+        ResultSet resultSet = statement.executeQuery();
 
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(query);
-            setParameters(statement, params);
-            resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                resultList.add(resultSet);
-            }
-        } finally {
-            closeResources(connection, statement, resultSet);
+        while (resultSet.next()) {
+            resultList.add(resultSet);
         }
 
         return resultList;
     }
 
-    protected void executeUpdate(String query, Object... params) throws Exception {
-        Connection connection = null;
-        PreparedStatement statement = null;
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(query);
-            setParameters(statement, params);
-            statement.executeUpdate();
-        } finally {
-            closeResources(connection, statement, null);
-        }
+    protected void executeUpdate(Connection connection, PreparedStatement statement, String query, Object... params) throws Exception {
+        statement = connection.prepareStatement(query);
+        setParameters(statement, params);
+        statement.executeUpdate();
     }
 
     private void setParameters(PreparedStatement statement, Object... params) throws SQLException {

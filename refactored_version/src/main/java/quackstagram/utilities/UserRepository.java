@@ -1,79 +1,130 @@
 package quackstagram.utilities;
 
-import java.util.ArrayList;
-
 import quackstagram.models.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository extends BaseRepository {
 
-    public User getUser(String username) throws Exception, SQLException {
-        System.out.println("Calling get user");
-        String query = "SELECT * FROM Users WHERE username = '" + username + "'";
-        return toUser(executeQuery(query, username));
+    public User getUser(String username) throws Exception {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            String query = "SELECT * FROM Users WHERE username = ?";
+            resultSet = executeQuery(connection, statement, query, username);
+
+            if (resultSet.next()) {
+                return toUser(resultSet);
+            } else {
+                throw new Exception("No such user " + username + " exists");
+            }
+        } finally {
+            closeResources(connection, statement, resultSet);
+        }
     }
 
     public void saveUser(User user) throws Exception {
-        System.out.println("Calling save user");
-        String query = "INSERT INTO Users (username, password, bio) VALUES (?, ?, ?) " +
-                       "ON DUPLICATE KEY UPDATE password = VALUES(password), bio = VALUES(bio)";
-        executeUpdate(query, user.getUsername(), user.getPassword(), user.getBio());
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = getConnection();
+            String query = "INSERT INTO Users (username, password, bio) VALUES (?, ?, ?) " +
+                           "ON DUPLICATE KEY UPDATE password = VALUES(password), bio = VALUES(bio)";
+            executeUpdate(connection, statement, query, user.getUsername(), user.getPassword(), user.getBio());
+        } finally {
+            closeResources(connection, statement, null);
+        }
     }
 
     public void deleteUser(String username) throws Exception {
-        System.out.println("Calling delete user");
-        String query = "DELETE FROM Users WHERE username = ?";
-        executeUpdate(query, username);
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = getConnection();
+            String query = "DELETE FROM Users WHERE username = ?";
+            executeUpdate(connection, statement, query, username);
+        } finally {
+            closeResources(connection, statement, null);
+        }
     }
 
     private User toUser(ResultSet resultSet) throws Exception {
-        System.out.println("toUser got called here");
         String username = resultSet.getString("username");
-        System.out.println("username: " + username);
         String password = resultSet.getString("password");
-        System.out.println("password: " + password);
         String bio = resultSet.getString("bio");
-        System.out.println("bio: " + bio);
 
-        // Assuming that these methods are implemented and fetch necessary details from other tables
         List<String> followingUsers = getFollowingUser(username);
-        System.out.println("Following user: " + followingUsers);
         int followersCount = getFollowersCount(username);
-        System.out.println("Followers count: " + followersCount);
         int postsCount = getPostCount(username);
-        System.out.println("Post count: " + postsCount);
-        User user = new User(username, password, bio, followingUsers, followersCount, postsCount);
-        System.out.println("User is " + user);
 
-        return user;
+        return new User(username, password, bio, followingUsers, followersCount, postsCount);
     }
 
     private List<String> getFollowingUser(String username) throws Exception {
-        String query = "SELECT followed_user FROM Follows WHERE follower_user = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
         List<String> results = new ArrayList<>();
-        for (var user: executeQueryList(query, username)) {
-            results.add(user.getString("followed_user"));
+
+        try {
+            connection = getConnection();
+            String query = "SELECT followed_user FROM Follows WHERE follower_user = ?";
+            resultSet = executeQuery(connection, statement, query, username);
+
+            while (resultSet.next()) {
+                results.add(resultSet.getString("followed_user"));
+            }
+        } finally {
+            closeResources(connection, statement, resultSet);
         }
+
         return results;
     }
 
     private int getFollowersCount(String username) throws Exception {
-        String query = "SELECT COUNT(*) AS count FROM Follows WHERE followed_user = ?";
-        ResultSet result = executeQuery(query, username);
-        Integer count = result.getInt("count");
-        
-        return count != null ? count : 0;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            String query = "SELECT COUNT(*) AS count FROM Follows WHERE followed_user = ?";
+            resultSet = executeQuery(connection, statement, query, username);
+
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            } else {
+                return 0;
+            }
+        } finally {
+            closeResources(connection, statement, resultSet);
+        }
     }
 
     private int getPostCount(String username) throws Exception {
-        String query = "SELECT COUNT(*) AS count FROM Posts WHERE username = ?";
-        ResultSet result = executeQuery(query, username);
-        Integer count = result.getInt("count");
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
-        return count != null ? count : 0;
+        try {
+            connection = getConnection();
+            String query = "SELECT COUNT(*) AS count FROM Posts WHERE username = ?";
+            resultSet = executeQuery(connection, statement, query, username);
+
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            } else {
+                return 0;
+            }
+        } finally {
+            closeResources(connection, statement, resultSet);
+        }
     }
 }
-
