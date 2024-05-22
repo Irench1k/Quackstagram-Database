@@ -22,6 +22,7 @@ public class SignUpController {
     public void signUp(String username, String password, String bio, File selectedFile) {
         try {
             DatabaseHandler.getUser(username);
+            System.out.println("User: " + DatabaseHandler.getUser(username).getUsername());
             JOptionPane.showMessageDialog(view,
                     "Username already exists. Please choose a different username.", "Error",
                     JOptionPane.ERROR_MESSAGE);

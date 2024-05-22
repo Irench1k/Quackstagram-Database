@@ -25,7 +25,6 @@ public class DatabaseHandler {
     private static final Path PROFILE_PICTURE_DIR = Paths.get("img", "profile");
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
     private static UserRepository userRepository = new UserRepository();
-    private static DatabaseConnector dbConnector = new DatabaseConnector();
 
     public static User getUser(String username) {
         User user = null;
