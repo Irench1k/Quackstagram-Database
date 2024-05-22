@@ -1,27 +1,19 @@
 package quackstagram.utilities;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 
-import quackstagram.models.AbstractModel;
 import quackstagram.models.Notification;
 import quackstagram.models.Picture;
 import quackstagram.models.User;
 
 public class DatabaseHandler {
-    private static final Path NOTIFICATIONS_FILE = Paths.get("data", "notifications.txt");
-    private static final Path PICTURES_FILE = Paths.get("data", "pictures.txt");
-    private static final Path USERS_FILE = Paths.get("data", "users.txt");
     private static final Path PROFILE_PICTURE_DIR = Paths.get("img", "profile");
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
     private static UserRepository userRepository = new UserRepository();
@@ -109,69 +101,6 @@ public class DatabaseHandler {
             notificationRepository.saveNotification(notification);
         } catch (Exception e) {
             System.out.println("Could not save notification: " + e);
-        }
-    }
-
-    private static <T> ArrayList<T> readFile(Path filePath, Function<String[], T> instanceCreator) {
-        ArrayList<T> result = new ArrayList<>();
-
-        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.isEmpty()) {
-                    continue;
-                }
-                String[] arguments = line.split("; ");
-                // Note that we have to use `.apply()` to call the function here, because it was
-                // passed as Function object to readFile
-                result.add(instanceCreator.apply(arguments));
-            }
-        } catch (IOException e) {
-            // The file is corrupt?
-            System.out.println("File path: (" + filePath + ") could not be read");
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    // If update == true and object already exists in a file, update its line
-    // If update == false, ALWAYS create a new line
-    // Existing object is detected by comparing the zero element in a file
-    private static <T extends AbstractModel<T>> void saveToFile(Path filePath, T object,
-            Function<String[], T> instanceCreator) {
-        ArrayList<T> existingData = readFile(filePath, instanceCreator);
-
-        if (object.isUpdatable()) {
-            // For example, if "mike" exists in the file, rewrite "mike's" line to update
-            // its data (e.g. followers, likes, etc)
-            boolean foundInFile = false;
-            for (int i = 0; i < existingData.size(); i++) {
-                T line = existingData.get(i);
-                if (object.isIdEqualTo(line)) {
-                    foundInFile = true;
-                    existingData.set(i, object);
-                    continue;
-                }
-            }
-
-            if (!foundInFile) {
-                existingData.add(0, object);
-            }
-        } else {
-            existingData.add(0, object);
-        }
-
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-            for (T line : existingData) {
-                String lineAsString = String.join("; ", line.serialize());
-                writer.write(lineAsString);
-                writer.newLine();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
