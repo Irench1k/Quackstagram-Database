@@ -28,7 +28,7 @@ import quackstagram.models.User;
 public class FileHandler {
     private static final Path NOTIFICATIONS_FILE = Paths.get("data", "notifications.txt");
     private static final Path PICTURES_FILE = Paths.get("data", "pictures.txt");
-    private static final Path USERS_FILE = Paths.get("data", "users.txt");
+    private static final Path USERS_FILE = Paths.get("refactored_version", "data", "users.txt");
     private static final Path PROFILE_PICTURE_DIR = Paths.get("img", "profile");
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
 

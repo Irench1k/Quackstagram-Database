@@ -1,20 +1,20 @@
 package quackstagram.models;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.io.BufferedReader;
-import java.nio.file.Files;
 
 /**
  * The {@code ModeratorModel} class represents the data model for the moderator panel.
  * It provides access to user and picture data, loading from and saving to persistent storage.
  */
 public class ModeratorModel {
-    private static final Path USERS_FILE = Paths.get("data", "users.txt");
+    private static final Path USERS_FILE = Paths.get("C:\\Users\\V\\Desktop\\[Databases]\\project\\final-project\\refactored_version\\data\\users.txt");
     private static final Path PICTURES_FILE = Paths.get("data", "pictures.txt");
     private List<User> userList;
 
