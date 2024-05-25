@@ -1,8 +1,10 @@
 package quackstagram.models;
 
+import java.io.File;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.TimeZone;
 
 // Represents a picture on Quackstagram
@@ -12,6 +14,14 @@ public class Picture extends AbstractModel<Picture> {
     private String caption;
     private String date;
     private int likesCount;
+
+    public String ducky = "img\\defaultImages\\ducky.png";
+    public String marxy = "img\\defaultImages\\marxy.png";
+    public String monety = "img\\defaultImages\\monety.png";
+    public String programmy = "img\\defaultImages\\programmy.png";
+    public String sailormoony = "img\\defaultImages\\sailormoony.png";
+
+    
 
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -74,9 +84,20 @@ public class Picture extends AbstractModel<Picture> {
         return pictureID;
     }
 
-    public String getPath() {
-        return "img/uploaded/" + pictureID + ".png";
+
+public String getPath() {
+    String[] defaultImagePaths = {ducky, marxy, monety, programmy, sailormoony};
+    Random random = new Random();
+    int index = random.nextInt(defaultImagePaths.length);
+    String selectedImagePath = defaultImagePaths[index];
+
+    File file = new File(selectedImagePath);
+    if (!file.exists()) {
+        // If the file doesn't exist, return a default path
+        return "default_image_not_found.png";
     }
+    return selectedImagePath;
+}
 
     public String getDate() {
         return date;

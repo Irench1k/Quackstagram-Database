@@ -25,14 +25,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import quackstagram.utilities.*;
 import quackstagram.controllers.postlogin.ExploreController;
 import quackstagram.models.Picture;
 import quackstagram.models.User;
 import quackstagram.utilities.DatabaseHandler;
 
 public class ExploreUI extends AbstractPostLogin {
-    private final int WIDTH = AbstractPostLogin.WIDTH;
+    private final int WIDTH = 300;
+    //private final int WIDTH = AbstractPostLogin.WIDTH;
     static final int IMAGE_SIZE = 100;
     private ExploreController controller;
 
