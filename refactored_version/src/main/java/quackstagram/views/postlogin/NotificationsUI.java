@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import quackstagram.utilities.*;
 import quackstagram.models.Notification;
 import quackstagram.models.User;
 import quackstagram.utilities.DatabaseHandler;

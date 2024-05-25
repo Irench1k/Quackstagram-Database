@@ -1,9 +1,10 @@
 package quackstagram.utilities;
 
-import java.sql.*;
-import java.util.ArrayList;
-
-import quackstagram.models.User;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseConnector {
 
@@ -12,7 +13,7 @@ public class DatabaseConnector {
         try {
             String URL = "jdbc:mysql://localhost:3306/quackstagram";
             Class.forName("com.mysql.cj.jdbc.Driver");
-            myCon = DriverManager.getConnection(URL, "BCS1510", "BCS1510");
+            myCon = DriverManager.getConnection(URL, "Vjosa", "Vjosa");
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

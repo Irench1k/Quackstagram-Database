@@ -18,3 +18,7 @@ dependencies {
 configurations {
     driver
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

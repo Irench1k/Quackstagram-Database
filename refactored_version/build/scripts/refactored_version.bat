@@ -68,11 +68,11 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\refactored_version.jar
+set CLASSPATH=%APP_HOME%\lib\refactored_version.jar;%APP_HOME%\lib\mysql-connector-j-8.4.0.jar;%APP_HOME%\lib\protobuf-java-3.25.1.jar
 
 
 @rem Execute refactored_version
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %REFACTORED_VERSION_OPTS%  -classpath "%CLASSPATH%" quackstagram.UserLaunch %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %REFACTORED_VERSION_OPTS%  -classpath "%CLASSPATH%" quackstagram.views.prelogin.SignInUI %*
 
 :end
 @rem End local scope for the variables with windows NT shell
