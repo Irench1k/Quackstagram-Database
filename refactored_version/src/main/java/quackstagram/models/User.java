@@ -1,71 +1,40 @@
 package quackstagram.models;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
-/**
- * Represents a user on Quackstagram, a social media platform.
- * A user has a username, bio, password, a count of posts, followers, and
- * following,
- * as well as a list of pictures posted by the user.
- *
- * @author MM
- * @version 1.0, 2024-03-02
- */
 public class User extends AbstractModel<User> {
     private String username;
     private String password;
     private String bio;
-    private String passCode;
-    private ArrayList<String> followingUsers; // other users that this one follows
+    private List<String> followingUsers; // other users that this one follows
     private int followersCount;
     private int postsCount;
 
-    /**
-     * Constructs a new User with the specified username, bio, and password.
-     * Initializes the posts count, followers count, and following count to 0.
-     * Initializes an empty list of pictures.
-     *
-     * @param username the username of the new user
-     * @param bio      the bio of the new user
-     * @param password the password for the new user
-     */
-    public User(String username, String password, String bio,String passCode, ArrayList<String> followingUsers,
+    public User(String username, String password, String bio, List<String> followingUsers,
                 int followersCount, int postsCount) {
         this.username = username;
         this.password = password;
         this.bio = bio;
-        this.passCode = passCode;
-        this.followingUsers = followingUsers;
-        this.followersCount = followersCount;
-        this.postsCount = postsCount;
-    }
-
-    public User(String username, String password, String bio, ArrayList<String> followingUsers,
-                int followersCount, int postsCount) {
-        this.username = username;
-        this.password = password;
-        this.bio = bio;
-        this.passCode = "0";
         this.followingUsers = followingUsers;
         this.followersCount = followersCount;
         this.postsCount = postsCount;
     }
 
     public static User createInstance(String[] args) throws RuntimeException {
-        if (args.length != 7) {
+        if (args.length != 6) {
             System.out.println(String.join(", ", args));
-            throw new RuntimeException("Couldn't parse users line, expected 7 arguments!");
+            throw new RuntimeException("Couldn't parse users line, expected 6 arguments!");
         }
         String username = args[0];
         String password = args[1];
         String bio = args[2];
-        String passCode = args[3];
-        ArrayList<String> followingUsers = new ArrayList<>(Arrays.asList(args[4].split(" ")));
-        int followersCount = Integer.parseInt(args[5]);
-        int postsCount = Integer.parseInt(args[6]);
+        ArrayList<String> followingUsers = new ArrayList<>(Arrays.asList(args[3].split(" ")));
+        int followersCount = Integer.parseInt(args[4]);
+        int postsCount = Integer.parseInt(args[5]);
 
-        return new User(username, password, bio, passCode, followingUsers, followersCount, postsCount);
+        return new User(username, password, bio, followingUsers, followersCount, postsCount);
     }
 
     @Override
@@ -74,7 +43,6 @@ public class User extends AbstractModel<User> {
             username,
             password,
             bio,
-            String.valueOf(passCode),
             String.join(" ", followingUsers),
             Integer.toString(followersCount),
             Integer.toString(postsCount)
@@ -100,6 +68,10 @@ public class User extends AbstractModel<User> {
      */
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     /**
@@ -149,10 +121,6 @@ public class User extends AbstractModel<User> {
 
     public boolean isPasswordEqual(String suppliedPassword) {
         return this.password.equals(suppliedPassword);
-    }
-
-    public boolean isPassCodeEqual(String suppliedPassCode) {
-        return this.passCode.equals(suppliedPassCode);
     }
 
     // Setter methods for followers and following counts

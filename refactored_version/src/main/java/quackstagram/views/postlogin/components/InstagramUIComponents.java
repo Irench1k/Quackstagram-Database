@@ -13,17 +13,12 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import quackstagram.controllers.postlogin.InstagramProfileController;
 import quackstagram.models.User;
-import quackstagram.views.ColorID;
-import quackstagram.views.Theme;
-import quackstagram.views.postlogin.InstagramProfileUI;
 
 public class InstagramUIComponents {
     private User currentUser; // logged in user
@@ -31,12 +26,6 @@ public class InstagramUIComponents {
     private static final int PROFILE_IMAGE_SIZE = 80; // Adjusted size for the profile image to match UI
     private boolean isCurrentUser = false;
     private InstagramProfileController controller;
-    private Theme theme = Theme.getInstance();
-    private Color followButtonColor = theme.getColor(ColorID.FOLLOW_BUTTON);
-    private Color textPrimaryColor = theme.getColor(ColorID.TEXT_PRIMARY);
-    private Color backgroundHeaderSecondary = theme.getColor(ColorID.BACKGROUND_HEADER_SECONDARY);
-    private Color minorBackgroundColor = theme.getColor(ColorID.MINOR_BACKGROUND);
-
 
     public InstagramUIComponents(User currentUser, User targetUser, InstagramProfileController controller) {
         this.currentUser = currentUser;
@@ -50,11 +39,11 @@ public class InstagramUIComponents {
         JPanel headerPanel = new JPanel();
 
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-        headerPanel.setBackground(backgroundHeaderSecondary);
+        headerPanel.setBackground(Color.GRAY);
 
         // Top Part of the Header (Profile Image, Stats, Follow Button)
         JPanel topHeaderPanel = new JPanel(new BorderLayout(10, 0));
-        topHeaderPanel.setBackground(minorBackgroundColor);
+        topHeaderPanel.setBackground(new Color(249, 249, 249));
 
         // Profile image
         ImageIcon profileIcon = new ImageIcon(
@@ -96,7 +85,6 @@ public class InstagramUIComponents {
 
     private JLabel createProfileNameLabel() {
         JLabel profileNameLabel = new JLabel(targetUser.getUsername());
-        profileNameLabel.setForeground(textPrimaryColor);
         profileNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         profileNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); // Padding on the sides
         return profileNameLabel;
@@ -105,17 +93,16 @@ public class InstagramUIComponents {
     private JPanel createProfileNameAndBioPanel() {
         JPanel profileNameAndBioPanel = new JPanel();
         profileNameAndBioPanel.setLayout(new BorderLayout());
-        profileNameAndBioPanel.setBackground(minorBackgroundColor);
+        profileNameAndBioPanel.setBackground(new Color(249, 249, 249));
         return profileNameAndBioPanel;
     }
 
     private JTextArea createProfileBio() {
         JTextArea profileBio = new JTextArea(targetUser.getBio());
-        profileBio.setForeground(textPrimaryColor);
         System.out.println("This is the bio " + targetUser.getUsername());
         profileBio.setEditable(false);
         profileBio.setFont(new Font("Arial", Font.PLAIN, 12));
-        profileBio.setBackground(minorBackgroundColor);
+        profileBio.setBackground(new Color(249, 249, 249));
         profileBio.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10)); // Padding on the sides
         return profileBio;
     }
@@ -131,8 +118,7 @@ public class InstagramUIComponents {
     private JButton createFollowButton() {
         JButton followButton;
         if (this.isCurrentUser) {
-            followButton = new JButton("Edit Profile ⤵");
-            followButton.addActionListener(e -> showThemeSelectionMenu(followButton));
+            followButton = new JButton("Edit Profile");
         } else {
             // Check if the current user is already being followed by the logged-in user
             if (this.currentUser.followsUser(targetUser)) {
@@ -148,34 +134,18 @@ public class InstagramUIComponents {
         followButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         followButton.setFont(new Font("Arial", Font.BOLD, 12));
         followButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, followButton.getMinimumSize().height));
-        followButton.setBackground(followButtonColor); // Gray button
-        followButton.setForeground(textPrimaryColor);
+        followButton.setBackground(new Color(225, 228, 232)); // A soft, appealing color that complements the UI
+        followButton.setForeground(Color.BLACK);
         followButton.setOpaque(true);
         followButton.setBorderPainted(false);
         followButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         return followButton;
     }
 
-    private void showThemeSelectionMenu(JButton source) {
-        JPopupMenu themeMenu = new JPopupMenu();
-
-            // Iterate over all available themes
-        for (Theme.ThemeName themeName : Theme.ThemeName.values()) {
-            JMenuItem themeItem = new JMenuItem(themeName.name());
-            themeItem.addActionListener(e -> {
-                Theme.getInstance().changeTheme(themeName);
-                controller.showProfileUI(); // Refresh the profile UI to apply the new theme
-            });
-            themeMenu.add(themeItem);
-        }
-
-        themeMenu.show(source, 0, source.getHeight());
-    }
-
     private JPanel createStatePanel() {
         JPanel statsPanel = new JPanel();
         statsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        statsPanel.setBackground(minorBackgroundColor);
+        statsPanel.setBackground(new Color(249, 249, 249));
         System.out.println("Number of posts for this user" + targetUser.getPostsCount());
         statsPanel.add(createStatLabel(Integer.toString(targetUser.getPostsCount()), "Posts"));
         statsPanel.add(createStatLabel(Integer.toString(targetUser.getFollowersCount()), "Followers"));
@@ -188,7 +158,7 @@ public class InstagramUIComponents {
         JLabel label = new JLabel("<html><div style='text-align: center;'>" + number + "<br/>" + text + "</div></html>",
                 SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 12));
-        label.setForeground(textPrimaryColor);
+        label.setForeground(Color.BLACK);
         return label;
     }
 }

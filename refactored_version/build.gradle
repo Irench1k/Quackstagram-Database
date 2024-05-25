@@ -4,5 +4,17 @@ plugins {
 }
 
 application {
-    mainClass = 'quackstagram.UserLaunch'
+    mainClass = 'quackstagram.views.prelogin.SignInUI'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.mysql:mysql-connector-j:8.4.0'
+}
+
+configurations {
+    driver
 }

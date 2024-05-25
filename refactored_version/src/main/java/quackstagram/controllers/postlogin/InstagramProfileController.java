@@ -1,7 +1,8 @@
 package quackstagram.controllers.postlogin;
 
-import quackstagram.utilities.FileHandler;
+import quackstagram.utilities.*;
 import quackstagram.models.User;
+import quackstagram.utilities.DatabaseHandler;
 import quackstagram.views.postlogin.InstagramProfileUI;
 
 public class InstagramProfileController {
@@ -23,6 +24,6 @@ public class InstagramProfileController {
 
     public void handleFollowAction() {
         this.currentUser.addUserToFollow(targetUser);
-        FileHandler.saveUser(this.currentUser);
+        DatabaseHandler.saveUser(this.currentUser);
     }
 }
