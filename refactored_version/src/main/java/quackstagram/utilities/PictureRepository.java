@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import quackstagram.models.Picture;
 
@@ -32,18 +30,21 @@ public class PictureRepository extends BaseRepository{
         }
     }
 
-    public ArrayList<Picture> getUserPictures(String username) throws Exception {
+    public ArrayList<Picture> getUserPictures(String username, int limit, int offset) throws Exception {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         ArrayList<Picture> userPictures = new ArrayList<>();
-
+        // vtest
+        long startTime = System.currentTimeMillis();
         try {
             connection = getConnection();
             String query;
             if (username == null) {
-                query = "SELECT * FROM Posts";
+                query = "SELECT * FROM Posts LIMIT ? OFFSET ?";
                 statement = connection.prepareStatement(query);
+                statement.setInt(1, limit);
+                statement.setInt(2, offset);
             } else {
                 query = "SELECT * FROM Posts WHERE username = ?";
                 statement = connection.prepareStatement(query);
@@ -56,6 +57,10 @@ public class PictureRepository extends BaseRepository{
             }
         } finally {
             closeResources(connection, statement, resultSet);
+            // vtest
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+            System.out.println("Total execution time: " + executionTime + " milliseconds");
         }
 
         return userPictures;

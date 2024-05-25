@@ -14,6 +14,7 @@ import quackstagram.models.Picture;
 import quackstagram.models.User;
 
 public class DatabaseHandler {
+
     private static final Path PROFILE_PICTURE_DIR = Paths.get("img", "profile");
     private static final Path UPLOADS_PICTURE_DIR = Paths.get("img", "uploaded");
     private static UserRepository userRepository = new UserRepository();
@@ -51,18 +52,24 @@ public class DatabaseHandler {
         return picture;
     }
 
-    // username == null -> return all pictures
     public static ArrayList<Picture> getUserPictures(String username) {
-        ArrayList<Picture> userPictures = new ArrayList<Picture>();
+        // Use a high limit for cases where username is not null
+        int defaultLimit = (username == null) ? 50 : Integer.MAX_VALUE;
+        int defaultOffset = 0;
+        return getUserPictures(defaultLimit, defaultOffset, username);
+    }
+
+    public static ArrayList<Picture> getUserPictures(int limit, int offset, String username) {
+        ArrayList<Picture> userPictures = new ArrayList<>();
         try {
-            userPictures = pictureRepository.getUserPictures(username);
+            userPictures = pictureRepository.getUserPictures(username, limit, offset);
         } catch (Exception e) {
             System.err.println("Could not get user pictures: " + e);
         }
-
         return userPictures;
     }
 
+    // Other methods...
     public static void savePicture(Picture picture) {
         try {
             pictureRepository.savePicture(picture);

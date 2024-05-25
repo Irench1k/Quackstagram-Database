@@ -7,14 +7,11 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,10 +28,13 @@ import quackstagram.models.User;
 import quackstagram.utilities.DatabaseHandler;
 
 public class ExploreUI extends AbstractPostLogin {
-    private final int WIDTH = 300;
-    //private final int WIDTH = AbstractPostLogin.WIDTH;
-    static final int IMAGE_SIZE = 100;
+
+    private final int WIDTH = AbstractPostLogin.WIDTH;
+    static final int IMAGE_SIZE = 90;
     private ExploreController controller;
+    private int offset = 0;
+    private final int limit = 30;
+    private boolean isLoading = false;
 
     /**
      * Represents the Explore user interface.
@@ -46,35 +46,44 @@ public class ExploreUI extends AbstractPostLogin {
 
     @Override
     protected JComponent createMainContentPanel() {
-        // Create the main content panel with search and image grid
-        // Search bar at the top
         JPanel searchPanel = new JPanel(new BorderLayout());
         JTextField searchField = new JTextField(" Search Users");
         searchPanel.add(searchField, BorderLayout.CENTER);
         searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, searchField.getPreferredSize().height));
 
-        // Image Grid
         JPanel imageGridPanel = new JPanel(new GridLayout(0, 3, 2, 2));
-        // Load images into the panel
-        loadImages(imageGridPanel);
-
         JScrollPane scrollPane = new JScrollPane(imageGridPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        // Main content panel that holds both the search bar and the image grid
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> {
+            if (!isLoading && !e.getValueIsAdjusting() && e.getValue() == e.getAdjustable().getMaximum() - scrollPane.getVerticalScrollBar().getModel().getExtent()) {
+                loadImages(imageGridPanel);
+            }
+        });
+
+        loadImages(imageGridPanel); // Load the initial set of images
+
         JPanel mainContentPanel = new JPanel();
         mainContentPanel.setLayout(new BoxLayout(mainContentPanel, BoxLayout.Y_AXIS));
         mainContentPanel.add(searchPanel);
-        mainContentPanel.add(scrollPane); // This will stretch to take up remaining space
+        mainContentPanel.add(scrollPane);
+
         return mainContentPanel;
     }
 
     public void loadImages(JPanel imageGridPanel) {
-        // Load images from the uploaded folder
-        for (Picture picture : DatabaseHandler.getUserPictures(null)) {
-            ImageIcon imageIcon = new ImageIcon(new ImageIcon(picture.getPath()).getImage()
-                    .getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_SMOOTH));
+        if (isLoading) return;
+        isLoading = true;
+
+        ArrayList<Picture> pictures = DatabaseHandler.getUserPictures(limit, offset, null);
+        for (Picture picture : pictures) {
+            ImageIcon imageIcon = new ImageIcon(picture.getPath());
+            if (imageIcon.getIconWidth() == -1) { // Image file not found
+                continue; // Skip this picture if image file is not found
+            } else {
+                imageIcon = new ImageIcon(imageIcon.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_SMOOTH));
+            }
 
             JLabel imageLabel = new JLabel(imageIcon);
             imageLabel.addMouseListener(new MouseAdapter() {
@@ -85,6 +94,10 @@ public class ExploreUI extends AbstractPostLogin {
             });
             imageGridPanel.add(imageLabel);
         }
+        offset += limit;
+        isLoading = false;
+        imageGridPanel.revalidate();
+        imageGridPanel.repaint();
     }
 
     private String getCalculatedTime(Picture picture) {
@@ -121,13 +134,13 @@ public class ExploreUI extends AbstractPostLogin {
     private JLabel getImageLabel(Picture picture) {
         JLabel imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        try {
-            BufferedImage originalImage = ImageIO.read(new File(picture.getPath()));
-            ImageIcon imageIcon = new ImageIcon(originalImage);
-            imageLabel.setIcon(imageIcon);
-        } catch (IOException ex) {
-            imageLabel.setText("Image not found");
+        ImageIcon imageIcon = new ImageIcon(picture.getPath());
+        if (imageIcon.getIconWidth() == -1) { // Image file not found
+            return null; // Return null if image file is not found
+        } else {
+            imageIcon = new ImageIcon(imageIcon.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_SMOOTH));
         }
+        imageLabel.setIcon(imageIcon);
 
         return imageLabel;
     }
@@ -184,4 +197,3 @@ public class ExploreUI extends AbstractPostLogin {
         repaint();
     }
 }
-
