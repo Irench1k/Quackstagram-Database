@@ -70,23 +70,24 @@ public class DatabaseHandler {
         return userPictures;
     }
 
-// Other methods...
-public static void savePicture(Picture picture) {
-    try {
-        pictureRepository.savePicture(picture);
-    } catch (SQLException e) {
-        // If triggers gets.. triggered?
-        // That state is defined by the trigger, so we recognise it
-        if (e.getSQLState().equals("45000")) {
-            System.out.println("Could not save picture: " + e.getMessage());
-            System.out.println("The caption contains banned words."); // Maybe turn this into error message on screen
-        } else {
-            System.out.println("Could not save picture: " + e.getMessage());
+    // Other methods...
+    public static void savePicture(Picture picture) {
+        try {
+            pictureRepository.savePicture(picture);
+        } catch (SQLException e) {
+            // If triggers gets.. triggered?
+            // That state is defined by the trigger, so we recognise it
+            if (e.getSQLState().equals("45000")) {
+                System.out.println("Could not save picture 1 : " + e.getMessage());
+                System.out.println("The caption contains banned words."); // Maybe turn this into error message on
+                                                                          // screen
+            } else {
+                System.out.println("Could not save picture 2 : " + e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println("Could not save picture 3 : " + e.getMessage());
         }
-    } catch (Exception e) {
-        System.out.println("Could not save picture: " + e.getMessage());
     }
-}
 
     public static void uploadImage(File file, Picture picture) throws IOException {
         BufferedImage image = ImageIO.read(file);
