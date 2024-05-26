@@ -17,7 +17,7 @@ public class PictureRepository extends BaseRepository{
 
         try {
             connection = getConnection();
-            String query = "SELECT * FROM Posts WHERE post_id = ?";
+            String query = "SELECT * FROM posts WHERE post_id = ?";
             resultSet = executeQuery(connection, statement, query, pictureId);
 
             if (resultSet.next()) {
@@ -41,12 +41,12 @@ public class PictureRepository extends BaseRepository{
             connection = getConnection();
             String query;
             if (username == null) {
-                query = "SELECT * FROM Posts LIMIT ? OFFSET ?";
+                query = "SELECT * FROM posts LIMIT ? OFFSET ?";
                 statement = connection.prepareStatement(query);
                 statement.setInt(1, limit);
                 statement.setInt(2, offset);
             } else {
-                query = "SELECT * FROM Posts WHERE username = ?";
+                query = "SELECT * FROM posts WHERE username = ?";
                 statement = connection.prepareStatement(query);
                 statement.setString(1, username);
             }
@@ -72,7 +72,7 @@ public class PictureRepository extends BaseRepository{
 
         try {
             connection = getConnection();
-            String query = "INSERT INTO Posts (post_id, username, caption, day) VALUES (?, ?, ?, ?) " +
+            String query = "INSERT INTO posts (post_id, username, caption, day) VALUES (?, ?, ?, ?) " +
                            "ON DUPLICATE KEY UPDATE username = VALUES(username), caption = VALUES(caption), day = VALUES(day)";
             executeUpdate(connection, statement, query, picture.getPictureID(), picture.getOwner(), picture.getCaption(), picture.getDate());
         } finally {
@@ -98,7 +98,7 @@ public class PictureRepository extends BaseRepository{
 
         try {
             connection = getConnection();
-            String query = "SELECT COUNT(*) AS count FROM Likes WHERE post_id = ?";
+            String query = "SELECT COUNT(*) AS count FROM likes WHERE post_id = ?";
             resultSet = executeQuery(connection, statement, query, pictureId);
 
             if (resultSet.next()) {

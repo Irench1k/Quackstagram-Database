@@ -19,8 +19,8 @@ public class NotificationRepository extends BaseRepository {
         try {
             connection = getConnection();
             String query = "SELECT l.notification_id, l.post_id, l.liker_user, l.timestamp "
-                    + "FROM Likes l "
-                    + "JOIN Posts p ON l.post_id = p.post_id "
+                    + "FROM likes l "
+                    + "JOIN posts p ON l.post_id = p.post_id "
                     + "WHERE p.username = ?";
             resultSet = executeQuery(connection, statement, query, username);
 
@@ -40,7 +40,7 @@ public class NotificationRepository extends BaseRepository {
 
         try {
             connection = getConnection();
-            String query = "INSERT INTO Likes (post_id, liker_user, timestamp) VALUES (?, ?, ?)";
+            String query = "INSERT INTO likes (post_id, liker_user, timestamp) VALUES (?, ?, ?)";
             executeUpdate(connection, statement, query,
                     notification.getPictureId(), notification.getLikedBy(), notification.getDate());
         } finally {

@@ -17,7 +17,7 @@ public class UserRepository extends BaseRepository {
 
         try {
             connection = getConnection();
-            String query = "SELECT * FROM Users WHERE username = ?";
+            String query = "SELECT * FROM users WHERE username = ?";
             resultSet = executeQuery(connection, statement, query, username);
 
             if (resultSet.next()) {
@@ -36,7 +36,7 @@ public class UserRepository extends BaseRepository {
 
         try {
             connection = getConnection();
-            String query = "INSERT INTO Users (username, password, bio) VALUES (?, ?, ?) " +
+            String query = "INSERT INTO users (username, password, bio) VALUES (?, ?, ?) " +
                            "ON DUPLICATE KEY UPDATE password = VALUES(password), bio = VALUES(bio)";
             executeUpdate(connection, statement, query, user.getUsername(), user.getPassword(), user.getBio());
         } finally {
@@ -64,7 +64,7 @@ public class UserRepository extends BaseRepository {
 
         try {
             connection = getConnection();
-            String query = "SELECT followed_user FROM Follows WHERE follower_user = ?";
+            String query = "SELECT followed_user FROM follows WHERE follower_user = ?";
             resultSet = executeQuery(connection, statement, query, username);
 
             while (resultSet.next()) {
@@ -84,7 +84,7 @@ public class UserRepository extends BaseRepository {
 
         try {
             connection = getConnection();
-            String query = "SELECT COUNT(*) AS count FROM Follows WHERE followed_user = ?";
+            String query = "SELECT COUNT(*) AS count FROM follows WHERE followed_user = ?";
             resultSet = executeQuery(connection, statement, query, username);
 
             if (resultSet.next()) {
@@ -104,7 +104,7 @@ public class UserRepository extends BaseRepository {
 
         try {
             connection = getConnection();
-            String query = "SELECT COUNT(*) AS count FROM Posts WHERE username = ?";
+            String query = "SELECT COUNT(*) AS count FROM posts WHERE username = ?";
             resultSet = executeQuery(connection, statement, query, username);
 
             if (resultSet.next()) {
