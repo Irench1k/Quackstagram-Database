@@ -43,15 +43,15 @@ public abstract class AbstractPostLogin extends BaseFrameManager {
         navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.X_AXIS));
         navigationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        navigationPanel.add(createIconButton("C:\\Users\\V\\Desktop\\C-Databases\\project\\final-project\\refactored_version\\img\\icons\\home.png", "home"));
+        navigationPanel.add(createIconButton("img/icons/home.png", "home"));
         navigationPanel.add(Box.createHorizontalGlue());
-        navigationPanel.add(createIconButton("C:\\Users\\V\\Desktop\\C-Databases\\project\\final-project\\refactored_version\\img\\icons\\search.png", "explore"));
+        navigationPanel.add(createIconButton("img/icons/search.png", "explore"));
         navigationPanel.add(Box.createHorizontalGlue());
-        navigationPanel.add(createIconButton("C:\\Users\\V\\Desktop\\C-Databases\\project\\final-project\\refactored_version\\img\\icons\\add.png", "add"));
+        navigationPanel.add(createIconButton("img/icons/add.png", "add"));
         navigationPanel.add(Box.createHorizontalGlue());
-        navigationPanel.add(createIconButton("C:\\Users\\V\\Desktop\\C-Databases\\project\\final-project\\refactored_version\\img\\icons\\heart.png", "notification"));
+        navigationPanel.add(createIconButton("img/icons/heart.png", "notification"));
         navigationPanel.add(Box.createHorizontalGlue());
-        navigationPanel.add(createIconButton("C:\\Users\\V\\Desktop\\C-Databases\\project\\final-project\\refactored_version\\img\\icons\\profile.png", "profile"));
+        navigationPanel.add(createIconButton("img/icons/profile.png", "profile"));
 
         return navigationPanel;
     }
