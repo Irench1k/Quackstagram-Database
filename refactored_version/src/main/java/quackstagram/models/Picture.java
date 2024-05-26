@@ -15,11 +15,11 @@ public class Picture extends AbstractModel<Picture> {
     private String date;
     private int likesCount;
 
-    public String ducky = "img\\defaultImages\\ducky.png";
-    public String marxy = "img\\defaultImages\\marxy.png";
-    public String monety = "img\\defaultImages\\monety.png";
-    public String programmy = "img\\defaultImages\\programmy.png";
-    public String sailormoony = "img\\defaultImages\\sailormoony.png";
+    public String ducky = "img/defaultImages/ducky.png";
+    public String marxy = "img/defaultImages/marxy.png";
+    public String monety = "img/defaultImages/monety.png";
+    public String programmy = "img/defaultImages/programmy.png";
+    public String sailormoony = "img/defaultImages/sailormoony.png";
 
     
 
