@@ -1,3 +1,7 @@
+CREATE DATABASE quackstagram;
+CREATE USER 'BCS1510'@'localhost' IDENTIFIED BY 'BCS1510';
+GRANT ALL PRIVILEGES ON quackstagram.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
 use quackstagram;
 
 CREATE TABLE Users (

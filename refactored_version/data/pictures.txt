@@ -6,6 +6,3 @@ Zara_1; Zara; Lost my map I have. Oops.; 2023-12-17 19:24:31; 0
 Zara_2; Zara; Yoga with Yoda; 2023-12-17 19:25:03; 0
 Mystar_1; Mystar; Cookies gone? ; 2023-12-17 19:26:50; 0
 Mystar_2; Mystar; In my soup a fly is.; 2023-12-17 19:27:24; 0
-ololo_1; ololo; Enter a caption; 2024-03-03 22:31:28; 49
-mike_1; mike; Enter a caption; 2024-03-03 23:04:07; 5
-1710041102; mike; Meow; 2024-03-10 03:25:02; 19

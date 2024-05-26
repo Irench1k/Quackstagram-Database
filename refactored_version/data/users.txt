@@ -2,8 +2,3 @@ Lorin; Password; For copyright reasons, I am not Grogu; Mystar Zara; 3; 2
 Xylo; Password; Fierce warrior, not solo; Lorin; 0; 2
 Zara; Password; Humanoid robot much like the rest; Lorin; 2; 2
 Mystar; Password; Xylo and I are not the same!; Lorin Zara; 1; 2
-matlab; Password; Hacker. Dad. Triathlete. In that order; ; 2; 1
-mike; Password; Bio; matlab ololo Lorin; 0; 2
-ololo; Password; Bio; matlab; 1; 1
-DuckDuck; 321; Hello everyone; ; 0; 1
-Cute Cat; 1234; I love everyone!; ; 0; 0

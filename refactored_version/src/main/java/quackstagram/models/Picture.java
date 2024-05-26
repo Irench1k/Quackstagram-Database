@@ -9,6 +9,7 @@ import java.util.TimeZone;
 
 // Represents a picture on Quackstagram
 public class Picture extends AbstractModel<Picture> {
+
     private String pictureID;
     private String owner;
     private String caption;
@@ -20,8 +21,6 @@ public class Picture extends AbstractModel<Picture> {
     public String monety = "img/defaultImages/monety.png";
     public String programmy = "img/defaultImages/programmy.png";
     public String sailormoony = "img/defaultImages/sailormoony.png";
-
-    
 
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -41,7 +40,7 @@ public class Picture extends AbstractModel<Picture> {
         int likes = Integer.parseInt(args[4]);
         return new Picture(args[0], args[1], args[2], args[3], likes);
     }
-    
+
     public static Picture createNewForUser(String owner, String caption) {
         String pictureId = String.valueOf(Instant.now().getEpochSecond());
         String formattedCurrentDate = ZonedDateTime.now(TimeZone.getTimeZone("UTC").toZoneId()).format(formatter);
@@ -50,7 +49,7 @@ public class Picture extends AbstractModel<Picture> {
 
     @Override
     public String[] serialize() {
-        return new String[] { pictureID, owner, caption, date, String.valueOf(likesCount) };
+        return new String[]{pictureID, owner, caption, date, String.valueOf(likesCount)};
     }
 
     @Override
@@ -84,20 +83,19 @@ public class Picture extends AbstractModel<Picture> {
         return pictureID;
     }
 
+    public String getPath() {
+        String[] defaultImagePaths = {ducky, marxy, monety, programmy, sailormoony};
+        Random random = new Random();
+        int index = random.nextInt(defaultImagePaths.length);
+        String selectedImagePath = defaultImagePaths[index];
 
-public String getPath() {
-    String[] defaultImagePaths = {ducky, marxy, monety, programmy, sailormoony};
-    Random random = new Random();
-    int index = random.nextInt(defaultImagePaths.length);
-    String selectedImagePath = defaultImagePaths[index];
+        File file = new File("img/uploaded/" + pictureID + ".png");
 
-    File file = new File(selectedImagePath);
-    if (!file.exists()) {
-        // If the file doesn't exist, return a default path
-        return "default_image_not_found.png";
+        if (!file.exists()) {
+            return selectedImagePath;
+        }
+        return "img/uploaded/" + pictureID + ".png";
     }
-    return selectedImagePath;
-}
 
     public String getDate() {
         return date;
