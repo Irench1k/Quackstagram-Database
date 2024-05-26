@@ -7,7 +7,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import quackstagram.utilities.*;
 import quackstagram.models.Picture;
 import quackstagram.models.User;
 import quackstagram.utilities.DatabaseHandler;

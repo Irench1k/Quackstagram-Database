@@ -1,8 +1,0 @@
-Lorin_1; Lorin; In the cookie jar my hand was not.; 2023-12-17 19:07:43; 26
-Lorin_2; Lorin; Meditate I must.; 2023-12-17 19:09:35; 6
-Xylo_1; Xylo; My tea strong as Force is.; 2023-12-17 19:22:40; 0
-Xylo_2; Xylo; Jedi mind trick failed.; 2023-12-17 19:23:14; 0
-Zara_1; Zara; Lost my map I have. Oops.; 2023-12-17 19:24:31; 0
-Zara_2; Zara; Yoga with Yoda; 2023-12-17 19:25:03; 0
-Mystar_1; Mystar; Cookies gone? ; 2023-12-17 19:26:50; 0
-Mystar_2; Mystar; In my soup a fly is.; 2023-12-17 19:27:24; 0
