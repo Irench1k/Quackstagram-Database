@@ -1,3 +1,5 @@
+use quackstagram;
+
 CREATE TABLE Users (
    username VARCHAR (12) PRIMARY KEY,
    password VARCHAR (20) NOT NULL,

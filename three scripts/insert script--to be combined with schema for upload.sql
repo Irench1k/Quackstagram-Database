@@ -1,4 +1,4 @@
-use quackstagram
+use quackstagram;
 
 insert into users 
 values 
