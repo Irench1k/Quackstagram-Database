@@ -1,7 +1,8 @@
 package quackstagram.controllers.postlogin;
 
-import quackstagram.utilities.FileHandler;
+import quackstagram.utilities.*;
 import quackstagram.models.User;
+import quackstagram.utilities.DatabaseHandler;
 import quackstagram.views.postlogin.ExploreUI;
 import quackstagram.views.postlogin.InstagramProfileUI;
 
@@ -17,7 +18,7 @@ public class ExploreController {
     public void goToUserProfile(String username) {
         User pictureOwner;
         try {
-            pictureOwner = FileHandler.getUser(username);
+            pictureOwner = DatabaseHandler.getUser(username);
         } catch (Exception error) {
             error.printStackTrace();
             return;

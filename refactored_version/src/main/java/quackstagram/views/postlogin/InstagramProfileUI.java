@@ -14,13 +14,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import quackstagram.utilities.FileHandler;
+import quackstagram.utilities.*;
 import quackstagram.controllers.postlogin.InstagramProfileController;
 import quackstagram.models.Picture;
 import quackstagram.models.User;
-import quackstagram.views.ColorID;
+import quackstagram.utilities.DatabaseHandler;
 import quackstagram.views.postlogin.components.InstagramUIComponents;
 
+/*
+ * The InstagramProfileUI class is handling UI craetion, file reading, and business logic.
+ */
+
+/**
+ * Represents the user interface for the Instagram profile.
+ */
 public class InstagramProfileUI extends AbstractPostLogin {
     private static final int GRID_IMAGE_SIZE = WIDTH / 3; // Static size for grid images
     private InstagramUIComponents uiComponents;
@@ -50,7 +57,7 @@ public class InstagramProfileUI extends AbstractPostLogin {
         contentPanel.removeAll(); // Clear existing content
         contentPanel.setLayout(new GridLayout(0, 3, 5, 5)); // Grid layout for image grid
 
-        for (Picture picture : FileHandler.getUserPictures(targetUser.getUsername())) {
+        for (Picture picture : DatabaseHandler.getUserPictures(targetUser.getUsername())) {
             ImageIcon imageIcon = new ImageIcon(new ImageIcon(picture.getPath()).getImage()
                     .getScaledInstance(GRID_IMAGE_SIZE, GRID_IMAGE_SIZE, Image.SCALE_SMOOTH));
             contentPanel.add(createImageLabel(imageIcon));
@@ -66,9 +73,6 @@ public class InstagramProfileUI extends AbstractPostLogin {
         add(uiComponents.createHeaderPanel(), BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(createControlPanel(), BorderLayout.SOUTH);
-
-        contentPanel.setBackground(getColor(ColorID.MAIN_BACKGROUND));
-        contentPanel.setBorder(null);
 
         revalidate();
         repaint();

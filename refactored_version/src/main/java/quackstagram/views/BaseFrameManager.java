@@ -15,16 +15,14 @@ public abstract class BaseFrameManager extends JFrame {
     protected static final int WIDTH = 300;
     protected static final int HEIGHT = 500;
     private String title;
-    private Theme theme = Theme.getInstance();
 
     public BaseFrameManager(String title) {
-        System.out.println("Instantiating BaseFrmameManager and theme is : " + this.theme);
         this.title = title;
         setTitle(getFormattedTitle());
         setSize(WIDTH, HEIGHT);
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout(10, 10));
     }
 
     protected String getRawTitle() {
@@ -33,14 +31,6 @@ public abstract class BaseFrameManager extends JFrame {
 
     protected String getFormattedTitle() {
         return this.title;
-    }
-
-    protected Color getColor(ColorID id) {
-        return this.theme.getColor(id);
-    }
-
-    protected String getIconPath(IconID id) {
-        return this.theme.getIconPath(id);
     }
 
     @SuppressWarnings("unused")
@@ -60,10 +50,10 @@ public abstract class BaseFrameManager extends JFrame {
     // Defined here, but needs configuration
     private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        headerPanel.setBackground(getColor(ColorID.BACKGROUND_HEADER)); // Set a darker background for the header
+        headerPanel.setBackground(new Color(51, 51, 51)); // Set a darker background for the header
         JLabel lblRegister = new JLabel(getHeaderText());
         lblRegister.setFont(new Font("Arial", Font.BOLD, 16));
-        lblRegister.setForeground(getColor(ColorID.OPPOSITE_TEXT)); // Set the text color to white
+        lblRegister.setForeground(Color.WHITE); // Set the text color to white
         headerPanel.add(lblRegister);
         headerPanel.setPreferredSize(new Dimension(WIDTH, 40)); // Give the header a fixed height
         return headerPanel;
